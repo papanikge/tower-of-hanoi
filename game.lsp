@@ -76,6 +76,21 @@
   (if (not (is-sorted (gethash :B stacks))) (die))
   (if (not (is-sorted (gethash :C stacks))) (die)))
 
+; the main move function. Moves from list a to b if possible
+(defun move-disc (a b)
+  ; abort if there is nothing to move
+  (if (null a)
+    (do
+      (format t "There is nothing there to move~%")
+      return)) ; is return what I need?? TODO
+  ; also if the move is illegal
+  (if (> (first a) (first b))
+    (do
+      (format t "You can move bigger discs on top of smaller ones.~%")
+      return))
+  (push (pop a) b))
+
+; TODO: can we set an alias to those (gethash :B stacks) things for easier access?
 ; function to start them all. main?
 (defun start ()
   (let ((x))
