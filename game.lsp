@@ -26,7 +26,7 @@
 (defun die ()
   (format t "The game configuration format is wrong.~%")
   (format t "Smaller discs go on top of the bigger ones.~%")
-  (abort)) ; TODO: is this abort correct???
+  (abort))
 
 ; ask the user for a filename
 (defun get-filename ()
@@ -54,6 +54,7 @@
 (defun get-conf-keyboard ()
   (format t "Rods: 3 (A, B, C)~%Discs: 5 (sizes: 1,2,3,4,5)~%")
   (format t "Please type the number of the corresponding discs you want in rod A. Type 0 when done.~%")
+  ; refactor this with dotimes and the user to input A/B/C TODO
   (loop
     (let ((x))
       (setf x (read))
@@ -78,17 +79,11 @@
 
 ; the main move function. Moves from list a to b if possible
 (defun move-disc (a b)
-  ; abort if there is nothing to move
-  (if (null a)
-    (do
-      (format t "There is nothing there to move~%")
-      return)) ; is return what I need?? TODO
-  ; also if the move is illegal
-  (if (> (first a) (first b))
-    (do
-      (format t "You can move bigger discs on top of smaller ones.~%")
-      return))
-  (push (pop a) b))
+  (if (and
+        (not (null a))
+        (< (first a) (first b)))
+    (push (pop a) b)
+    (format t "Your move was illegal. ~%"))
 
 ; TODO: can we set an alias to those (gethash :B stacks) things for easier access?
 ; function to start them all. main?
@@ -99,4 +94,6 @@
     (cond
       ((= x 1) (get-conf-keyboard))
       ((= x 2) (read-from-file (read)))
-      (t return))))
+      (t (do
+           (format t "Please enter only 1 or 2.~%")
+           (abort))))))
