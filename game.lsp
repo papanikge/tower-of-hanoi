@@ -60,9 +60,21 @@
               (push (parse-integer x) (gethash where stacks)))))))))
 
 ; save a game-conf to a provided file
-(defun save-to-file (filename)
-    ; TODO. write to file?
-  )
+(defun save-to-file ()
+  (let ((one))
+    (with-open-file (str (get-filename)
+                         :direction :output
+                         :if-exists :supersede
+                         :if-does-not-exist :create)
+      (dolist (one (gethash :A stacks))
+        (format str "~D" one))
+      (format str "~%")
+      (dolist (one (gethash :B stacks))
+        (format str "~D" one))
+      (format str "~%")
+      (dolist (one (gethash :C stacks))
+        (format str "~D" one))
+      (format str "~%"))))
 
 ; asks and saves the game-conf from user input
 (defun get-conf-keyboard ()
@@ -103,7 +115,7 @@
     (setf x (read-line))
     (cond
       ((= x 1) (get-conf-keyboard))
-      ((= x 2) (read-from-file (read)))
+      ((= x 2) (read-from-file))
       (t (do
            (format t "Please enter only 1 or 2.~%")
            (abort))))))
