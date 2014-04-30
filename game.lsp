@@ -72,9 +72,9 @@
     (let ((r))
       (setf r (read-line))
       (cond
-        ((string-equal "a" r) (push i (gethash :A stacks)))
-        ((string-equal "b" r) (push i (gethash :B stacks)))
-        ((string-equal "c" r) (push i (gethash :C stacks)))
+        ((string-equal "a" r) (push (+ i 1) (gethash :A stacks)))
+        ((string-equal "b" r) (push (+ i 1) (gethash :B stacks)))
+        ((string-equal "c" r) (push (+ i 1) (gethash :C stacks)))
         (t (die)))))
   ; test lists, so they following the rules. Smaller on top of bigger.
   (if (not (is-sorted (gethash :A stacks))) (die))
