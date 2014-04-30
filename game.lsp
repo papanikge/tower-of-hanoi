@@ -33,13 +33,31 @@
 (defun is-sorted (ls)
   (equal ls (sort (copy-list ls) #'<)))
 
+; auxiliary function to translate number of rods to symbols
+(defun translate-to-symbols (n)
+  (cond
+    ((= n 1) :A)
+    ((= n 2) :B)
+    ((= n 3) :C)
+    (t (die))))
+
 ; load a game-conf from the provided file
 (defun read-from-file ()
-  (let ((filename))
+  (let ((filename) (lines))
+    (setf lines 1)
     (setf filename (get-filename))
     (with-open-file (stream filename)
-      (push (split-sequence (read-line stream)) (gethash :A stacks)))))
-  ;;; TODO: need to put to correct peg and convert them to numbers (parse-integer). not strings
+      (loop
+        ; our file should only have 3 lines (as many as the rods)
+        (when (>= lines 3) (return))
+        (let ((x) (where))
+          ; reading & testing char-by-char
+          (setf x (read-char stream))
+          (if (eql x #\Newline)
+            (+ lines 1)
+            (do
+              (setf where (translate-to-symbols lines))
+              (push (parse-integer x) (gethash where stacks)))))))))
 
 ; save a game-conf to a provided file
 (defun save-to-file (filename)
