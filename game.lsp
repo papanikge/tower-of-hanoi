@@ -81,19 +81,20 @@
   (if (not (is-sorted (gethash :B stacks))) (die))
   (if (not (is-sorted (gethash :C stacks))) (die)))
 
-; the main move function. Moves from list a to b if possible
-(defun move-disc (a b)
-  (if (and
-        (not (null a))
-        (< (first a) (first b)))
-    (push (pop a) b)
-    (format t "Your move was illegal. ~%"))
-
 ; wrapper function to ease the movement (without using hashes)
-; and to print the game configuration
-(defun move ()
-  ; TODO
+; and to print the game configuration. Accepts symbols (:A :B :C or lower case)
+(defun move (from to)
+  (move-disc (gethash from stacks) (gethash to stacks))
+  ; TODO print configuration
   )
+
+; the main move function. Moves from list a to b if possible
+(defun move-disc (from to)
+  (if (and
+        (not (null from))
+        (< (first from) (first to)))
+    (push (pop from) to)
+    (format t "Your move was illegal. ~%")))
 
 ; function to start them all. main?
 (defun start ()
