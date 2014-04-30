@@ -3,11 +3,6 @@
 ;; Tower of Hanoi game description and functions for CEID
 ;;
 
-; Format identifiers:
-; ~A: string
-; ~D: number
-; ~%: new-line
-
 ; We are going to keep the game-configuration in the global var stacks.
 ; Using a hash-table so we can have names for each rod/peg.
 (defvar stacks)
@@ -53,25 +48,15 @@
 ; asks and saves the game-conf from user input
 (defun get-conf-keyboard ()
   (format t "Rods: 3 (A, B, C)~%Discs: 5 (sizes: 1,2,3,4,5)~%")
-  (format t "Please type the number of the corresponding discs you want in rod A. Type 0 when done.~%")
-  ; refactor this with dotimes and the user to input A/B/C TODO
-  (loop
-    (let ((x))
-      (setf x (read))
-      (if (= x 0) break ; probably wrong. TODO.
-        (push x (gethash :A stacks)))))
-  (format t "Same for rod B~%")
-  (loop
-    (let ((x))
-      (setf x (read))
-      (if (= x 0) break ; probably wrong. TODO.
-        (push x (gethash :B stacks)))))
-  (format t "Same for rod C~%")
-  (loop
-    (let ((x))
-      (setf x (read))
-      (if (= x 0) break ; probably wrong. TODO.
-        (push x (gethash :C stacks)))))
+  (dotimes (i 5)
+    (format t "Disc: ~D - Please type the corresponding key that you want it placed.~%" (+ i 1))
+    (let ((r))
+      (setf r (read))
+      (cond
+        ((string-equal "a" r) (push i (gethash :A stacks)))
+        ((string-equal "b" r) (push i (gethash :B stacks)))
+        ((string-equal "c" r) (push i (gethash :C stacks)))
+        (t (die)))))
   ; test lists, so they following the rules. Smaller on top of bigger.
   (if (not (is-sorted (gethash :A stacks))) (die))
   (if (not (is-sorted (gethash :B stacks))) (die))
@@ -85,7 +70,12 @@
     (push (pop a) b)
     (format t "Your move was illegal. ~%"))
 
-; TODO: can we set an alias to those (gethash :B stacks) things for easier access?
+; wrapper function to ease the movement (without using hashes)
+; and to print the game configuration
+(defun move ()
+  ; TODO
+  )
+
 ; function to start them all. main?
 (defun start ()
   (let ((x))
