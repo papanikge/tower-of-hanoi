@@ -20,13 +20,14 @@
 ; our abort function in case of wrong game configuration
 (defun die ()
   (format t "The game configuration format is wrong.~%")
-  (format t "Smaller discs go on top of the bigger ones.~%")
+  (format t "Smaller discs go on top of the bigger ones. Aborting.~%")
   (abort))
 
 ; ask the user for a filename
 (defun get-filename ()
   (format t "Please type a file name... ")
-  (read))
+  (finish-output)
+  (read-line))
 
 ; check if list is sorted
 (defun is-sorted (ls)
@@ -51,7 +52,7 @@
   (dotimes (i 5)
     (format t "Disc: ~D - Please type the corresponding key that you want it placed.~%" (+ i 1))
     (let ((r))
-      (setf r (read))
+      (setf r (read-line))
       (cond
         ((string-equal "a" r) (push i (gethash :A stacks)))
         ((string-equal "b" r) (push i (gethash :B stacks)))
@@ -80,7 +81,7 @@
 (defun start ()
   (let ((x))
     (print-hello-msg)
-    (setf x (read))
+    (setf x (read-line))
     (cond
       ((= x 1) (get-conf-keyboard))
       ((= x 2) (read-from-file (read)))
