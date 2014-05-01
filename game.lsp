@@ -63,7 +63,7 @@
   (let ((one))
     (with-open-file (str (get-filename)
                          :direction :output
-                         :if-exists :supersede
+                         :if-exists :supersede  ; overwriting old files
                          :if-does-not-exist :create)
       (dolist (one (gethash :A stacks))
         (format str "~D" one))
@@ -96,8 +96,16 @@
 ; and to print the game configuration. Accepts symbols (:A :B :C or lower case)
 (defun move (from to)
   (move-disc (gethash from stacks) (gethash to stacks))
-  ; TODO print configuration
-  )
+  (format t "~% Game configuration as of now. ~%")
+  (dotimes (i 5)
+    (format t " ")
+    ; checking and printing the number only if the size of the length is at our current point
+    (if (>= (length (gethash :A stacks)) (- 5 i)) (format t "~D" (subseq (gethash :A stacks) i 1)) (format t "|"))
+    (format t " ")
+    (if (>= (length (gethash :B stacks)) (- 5 i)) (format t "~D" (subseq (gethash :B stacks) i 1)) (format t "|"))
+    (format t " ")
+    (if (>= (length (gethash :C stacks)) (- 5 i)) (format t "~D" (subseq (gethash :C stacks) i 1)) (format t "|"))
+    (format t "~%")))
 
 ; the main move function. Moves from list a to b if possible
 (defun move-disc (from to)
