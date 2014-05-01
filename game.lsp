@@ -43,8 +43,7 @@
 
 ; load a game-conf from the provided file
 (defun read-from-file ()
-  (let ((filename) (lines))
-    (setf lines 1)
+  (let ((filename) (lines 1))
     (setf filename (get-filename))
     (with-open-file (stream filename)
       (loop
