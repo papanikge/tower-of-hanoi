@@ -79,14 +79,14 @@
 ; asks and saves the game-conf from user input
 (defun get-conf-keyboard ()
   (format t "Rods: 3 (A, B, C)~%Discs: 5 (sizes: 1,2,3,4,5)~%")
-  (dotimes (i 5)
-    (format t "Disc: ~D - Please type the corresponding key that you want it placed.~%" (+ i 1))
+  (loop for i from 5 downto 1 do
+    (format t "Disc: ~D - Please type the corresponding key of the rod you want the disc placed.~%" i)
     (let ((r))
       (setf r (read-line))
       (cond
-        ((string-equal "a" r) (push (+ i 1) (gethash :A stacks)))
-        ((string-equal "b" r) (push (+ i 1) (gethash :B stacks)))
-        ((string-equal "c" r) (push (+ i 1) (gethash :C stacks)))
+        ((string-equal "a" r) (push i (gethash :A stacks)))
+        ((string-equal "b" r) (push i (gethash :B stacks)))
+        ((string-equal "c" r) (push i (gethash :C stacks)))
         (t (die)))))
   ; test lists, so they following the rules. Smaller on top of bigger.
   (if (not (is-sorted (gethash :A stacks))) (die))
