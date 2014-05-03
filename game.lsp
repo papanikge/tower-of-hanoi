@@ -30,6 +30,12 @@
 (defun is-sorted (ls)
   (equal ls (sort (copy-list ls) #'<)))
 
+; check if the provided lists have each element exactly once
+(defun is-uniq (l1 l2 l3)
+  (let ((merged))
+    (setf merged (append l1 l2 l3))
+    (equal merged (remove-duplicates merged))))
+
 ; auxiliary function to translate number of rods to symbols
 (defun translate-to-symbols (n)
   (cond
@@ -86,10 +92,10 @@
         ((string-equal "c" r) (push i (gethash :C stacks)))
         (t (die)))))
   ; test lists, so they following the rules. Smaller on top of bigger.
-  ; TODO: elements in lists should be unique
   (if (not (is-sorted (gethash :A stacks))) (die))
   (if (not (is-sorted (gethash :B stacks))) (die))
-  (if (not (is-sorted (gethash :C stacks))) (die)))
+  (if (not (is-sorted (gethash :C stacks))) (die))
+  (if (not (is-uniq (gethash :A stacks) (gethash :B stacks) (gethash :C stacks))) (die)))
 
 ; this is an auxiliary function to avoid multiple if-s in the move-disc macro
 ; it is used to check the second ('to') list
