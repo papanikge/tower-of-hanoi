@@ -14,8 +14,8 @@
 ; self-explanatory explanation message
 (defun print-hello-msg ()
   (format t "Welcome to Tower of Hanoi emulation!!!~%")
-  (format t "    Press 1 if you want to enter the game configuration in the keyboard.~%")
-  (format t "       or 2 if you want to enter a file name.~%"))
+  (format t "    Press 1 if you want to enter the game configuration from the keyboard.~%")
+  (format t "       or 2 if you want to enter a file name to read it from.~%"))
 
 ; our abort function in case of wrong game configuration
 (defun die ()
@@ -57,27 +57,28 @@
             (do
               (setf where (translate-to-symbols lines))
               (push (parse-integer x) (gethash where stacks)))))))))
+; TODOS: fix read-from-file
 
 ; save a game-conf to a provided file
 (defun save-to-file ()
-  (let ((one))
+  (let ((ch))
     (with-open-file (str (get-filename)
                          :direction :output
                          :if-exists :supersede  ; overwriting old files
                          :if-does-not-exist :create)
-      (dolist (one (gethash :A stacks))
-        (format str "~D" one))
+      (dolist (ch (gethash :A stacks))
+        (format str "~D" ch))
       (format str "~%")
-      (dolist (one (gethash :B stacks))
-        (format str "~D" one))
+      (dolist (ch (gethash :B stacks))
+        (format str "~D" ch))
       (format str "~%")
-      (dolist (one (gethash :C stacks))
-        (format str "~D" one))
+      (dolist (ch (gethash :C stacks))
+        (format str "~D" ch))
       (format str "~%"))))
 
 ; asks and saves the game-conf from user input
 (defun get-conf-keyboard ()
-  (format t "Rods: 3 (A, B, C)~%Discs: 5 (sizes: 1,2,3,4,5)~%")
+  (format t "Rods: 3 (A, B, C) --- Discs: 5 (sizes: 1,2,3,4,5)~%")
   (loop for i from 5 downto 1 do
     (format t "Disc: ~D - Please type the corresponding key of the rod you want the disc placed.~%" i)
     (let ((r))
@@ -88,6 +89,7 @@
         ((string-equal "c" r) (push i (gethash :C stacks)))
         (t (die)))))
   ; test lists, so they following the rules. Smaller on top of bigger.
+  ; TODO: elements in lists should be unique
   (if (not (is-sorted (gethash :A stacks))) (die))
   (if (not (is-sorted (gethash :B stacks))) (die))
   (if (not (is-sorted (gethash :C stacks))) (die)))
@@ -96,7 +98,7 @@
 ; and to print the game configuration. Accepts symbols (:A :B :C or lower case)
 (defun move (from to)
   (move-disc (gethash from stacks) (gethash to stacks))
-  (format t "~% Game configuration as of now. ~%")
+  (format t "~% ~~~ Game configuration ~~~")
   (dotimes (i 5)
     (format t " ")
     ; checking and printing the number only if the size of the length is at our current point
@@ -115,11 +117,13 @@
     (push (pop from) to)
     (format t "Your move was illegal. ~%")))
 
-; function to start them all. main?
-(defun start ()
+; function to init them all. main?
+(defun init ()
   (let ((x))
     (print-hello-msg)
     (setf x (read-line))
+    ; TODO: after aborting -->  reverting?
+    ; maybe init the '()-s here...?
     (cond
       ((= x 1) (get-conf-keyboard))
       ((= x 2) (read-from-file))
