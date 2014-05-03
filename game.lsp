@@ -26,6 +26,13 @@
   (finish-output)
   (read-line))
 
+; print the game configuration
+(defun print-conf ()
+  (format t "~%=-=-=-= Game configuration =-=-=-= ~%")
+  (if (not (null (gethash :A stacks))) (format t "A: ~S~%" (gethash :A stacks)) (format t "A: ()~%"))
+  (if (not (null (gethash :B stacks))) (format t "B: ~S~%" (gethash :B stacks)) (format t "B: ()~%"))
+  (if (not (null (gethash :C stacks))) (format t "C: ~S~%" (gethash :C stacks)) (format t "C: ()~%")))
+
 ; check if list is sorted
 (defun is-sorted (ls)
   (equal ls (sort (copy-list ls) #'<)))
@@ -111,13 +118,6 @@
          (< (first ,from) (myfirst ,to)))
      (push (pop ,from) ,to)
      (format t "Your move was illegal. ~%")))
-
-; print the game configuration
-(defun print-conf ()
-  (format t "~%=-=-=-= Game configuration =-=-=-= ~%")
-  (if (not (null (gethash :A stacks))) (format t "A: ~S~%" (gethash :A stacks)) (format t "A: ()~%"))
-  (if (not (null (gethash :B stacks))) (format t "B: ~S~%" (gethash :B stacks)) (format t "B: ()~%"))
-  (if (not (null (gethash :C stacks))) (format t "C: ~S~%" (gethash :C stacks)) (format t "C: ()~%")))
 
 ; main (wrapper) function for one step of the game. Moves and prints.
 ; accepts symbols (:A :B :C or lower case)
