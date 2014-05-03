@@ -109,20 +109,19 @@
      (push (pop ,from) ,to)
      (format t "Your move was illegal. ~%")))
 
-; wrapper function to ease the movement (without using hashes)
-; and to print the game configuration. Accepts symbols (:A :B :C or lower case)
+; print the game configuration
+(defun print-conf ()
+  (format t "~%=-=-=-= Game configuration =-=-=-= ~%")
+  (if (not (null (gethash :A stacks))) (format t "A: ~S~%" (gethash :A stacks)) (format t "A: ()~%"))
+  (if (not (null (gethash :B stacks))) (format t "B: ~S~%" (gethash :B stacks)) (format t "B: ()~%"))
+  (if (not (null (gethash :C stacks))) (format t "C: ~S~%" (gethash :C stacks)) (format t "C: ()~%")))
+
+; main (wrapper) function for one step of the game. Moves and prints.
+; accepts symbols (:A :B :C or lower case)
 (defun move (from to)
   (move-disc (gethash from stacks) (gethash to stacks))
-  (format t "~% ~~~ Game configuration ~~~")
-  (dotimes (i 5)
-    (format t " ")
-    ; checking and printing the number only if the size of the length is at our current point
-    (if (>= (length (gethash :A stacks)) (- 5 i)) (format t "~D" (subseq (gethash :A stacks) i 1)) (format t "|"))
-    (format t " ")
-    (if (>= (length (gethash :B stacks)) (- 5 i)) (format t "~D" (subseq (gethash :B stacks) i 1)) (format t "|"))
-    (format t " ")
-    (if (>= (length (gethash :C stacks)) (- 5 i)) (format t "~D" (subseq (gethash :C stacks) i 1)) (format t "|"))
-    (format t "~%")))
+  (print-conf)
+  (abort)) ; this is just to avoid printing the returned NIL
 
 ; function to init them all. main?
 (defun init ()
