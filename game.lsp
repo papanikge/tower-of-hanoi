@@ -94,6 +94,21 @@
   (if (not (is-sorted (gethash :B stacks))) (die))
   (if (not (is-sorted (gethash :C stacks))) (die)))
 
+; this is an auxiliary function to avoid multiple if-s in the move-disc macro
+; it is used to check the second ('to') list
+(defun myfirst (lis)
+  (if (null lis)
+    6 ; returns a value larger than the larger disc
+    (first lis)))
+
+; the move macro that moves from list 'from' to 'to' if possible
+(defmacro move-disc (from to)
+  `(if (and
+         (not (null ,from))
+         (< (first ,from) (myfirst ,to)))
+     (push (pop ,from) ,to)
+     (format t "Your move was illegal. ~%")))
+
 ; wrapper function to ease the movement (without using hashes)
 ; and to print the game configuration. Accepts symbols (:A :B :C or lower case)
 (defun move (from to)
@@ -108,14 +123,6 @@
     (format t " ")
     (if (>= (length (gethash :C stacks)) (- 5 i)) (format t "~D" (subseq (gethash :C stacks) i 1)) (format t "|"))
     (format t "~%")))
-
-; the main move function. Moves from list a to b if possible
-(defun move-disc (from to)
-  (if (and
-        (not (null from))
-        (< (first from) (first to)))
-    (push (pop from) to)
-    (format t "Your move was illegal. ~%")))
 
 ; function to init them all. main?
 (defun init ()
