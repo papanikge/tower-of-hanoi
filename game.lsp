@@ -65,7 +65,7 @@
 
 ; save a game-conf to a provided file
 (defun save-to-file ()
-  (let ((ch))
+  (let ()
     (with-open-file (str (get-filename)
                          :direction :output
                          :if-exists :supersede  ; overwriting old files
@@ -128,8 +128,8 @@
     (print-hello-msg)
     (setf x (read-line))
     (cond
-      ((= x 1) (get-conf-keyboard))
-      ((= x 2) (read-from-file))
-      (t (do
+      ((= (parse-integer x) 1) (get-conf-keyboard))
+      ((= (parse-integer x) 2) (read-from-file))
+      (t (progn
            (format t "Please enter only 1 or 2.~%")
            (init))))))
