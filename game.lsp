@@ -47,21 +47,24 @@
 
 ; load a game-conf from the provided file
 (defun read-from-file ()
-  (let ((filename) (lines 1))
-    (setf filename (get-filename))
-    (with-open-file (stream filename)
-      (loop
-        ; our file should only have 3 lines (as many as the rods)
-        (when (>= lines 3) (return))
-        (let ((x) (where))
-          ; reading & testing char-by-char
-          (setf x (read-char stream))
-          (if (eql x #\Newline)
-            (+ lines 1)
-            (do
-              (setf where (translate-to-symbols lines))
-              (push (parse-integer x) (gethash where stacks)))))))))
-; TODOS: fix read-from-file
+  (let ((filename (get-filename)) (temp '()) (lines 1))
+    (if (probe-file filename)
+      (with-open-file (stream filename)
+        ; parsing the file character-by-character
+        (do ((char (read-char stream nil)
+                   (read-char stream nil)))
+          ((null char))
+          (if (<= lines 3)
+            (if (eql char #\Newline)
+              (progn
+                ; this is where all the magic with the actual lists is happening
+                (setf (gethash (translate-to-symbols lines) stacks) (reverse temp))
+                ; re-initialize the temp one for the next round
+                (setf temp '())
+                (setf lines (1+ lines)))
+              ; if we get an actual character:
+              (push (digit-char-p char) temp)))))
+      (format t "File does not exist.~%"))))
 
 ; save a game-conf to a provided file
 (defun save-to-file ()
