@@ -7,9 +7,6 @@
 ; Using a hash-table so we can have names for each rod/peg.
 (defvar stacks)
 (setf stacks (make-hash-table))
-(setf (gethash :A stacks) '())
-(setf (gethash :B stacks) '())
-(setf (gethash :C stacks) '())
 
 ; self-explanatory explanation message
 (defun print-hello-msg ()
@@ -20,8 +17,8 @@
 ; our abort function in case of wrong game configuration
 (defun die ()
   (format t "The game configuration format is wrong.~%")
-  (format t "Smaller discs go on top of the bigger ones. Aborting.~%")
-  (abort))
+  (format t "Smaller discs go on top of the bigger ones. Aborting and reinitializing...~%")
+  (init))
 
 ; ask the user for a filename
 (defun get-filename ()
@@ -125,14 +122,15 @@
 
 ; function to init them all. main?
 (defun init ()
+  (setf (gethash :A stacks) '())
+  (setf (gethash :B stacks) '())
+  (setf (gethash :C stacks) '())
   (let ((x))
     (print-hello-msg)
     (setf x (read-line))
-    ; TODO: after aborting -->  reverting?
-    ; maybe init the '()-s here...?
     (cond
       ((= x 1) (get-conf-keyboard))
       ((= x 2) (read-from-file))
       (t (do
            (format t "Please enter only 1 or 2.~%")
-           (abort))))))
+           (init))))))
