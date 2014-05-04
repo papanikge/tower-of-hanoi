@@ -122,6 +122,7 @@
 (defun move (from to)
   (move-disc (gethash from stacks) (gethash to stacks))
   (print-conf)
+  (save-to-file "hanoi.conf")
   (abort)) ; this is just to avoid printing the returned NIL
 
 ; function to init them all. main?
@@ -137,4 +138,6 @@
       ((= (parse-integer x) 2) (read-from-file))
       (t (progn
            (format t "Please enter only 1 or 2.~%")
-           (init))))))
+           (init)
+           (abort))))
+    (print-conf)))
