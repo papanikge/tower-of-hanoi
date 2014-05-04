@@ -67,9 +67,11 @@
       (format t "File does not exist.~%"))))
 
 ; save a game-conf to a provided file
-(defun save-to-file ()
+(defun save-to-file (&optional (filename "" given?))
+  (if (not given?)
+    (setf filename (get-filename)))
   (let ()
-    (with-open-file (str (get-filename)
+    (with-open-file (str filename
                          :direction :output
                          :if-exists :supersede  ; overwriting old files
                          :if-does-not-exist :create)
